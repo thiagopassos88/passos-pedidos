@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Passos Sports — Pedidos</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --verde: #1a7a3c;
+  --amarelo: #f5c800;
+  --borda: #d8d8d8;
+  --fundo: #f4f4f4;
+  --branco: #fff;
+  --texto: #1a1a1a;
+  --vermelho: #c0392b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Segoe UI', Arial, sans-serif; background: var(--fundo); color: var(--texto); }
+
+/* HEADER */
+header {
+  background: var(--verde); color: white;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+header h1 { font-size: 1.05rem; font-weight: 800; }
+header span { font-size: .75rem; opacity: .85; }
+
+/* FORM */
+.form-card {
+  background: var(--branco);
+  border-bottom: 3px solid var(--amarelo);
+  padding: 16px 16px 18px;
+}
+.form-card h2 { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--verde); margin-bottom: 13px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.full { grid-column: 1 / -1; }
+
+label { display: block; font-size: .68rem; font-weight: 700; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+input, select {
+  width: 100%; border: 1.5px solid var(--borda); border-radius: 7px;
+  padding: 10px 11px; font-size: .9rem; background: #fafafa; color: var(--texto);
+  outline: none; -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus { border-color: var(--verde); background: #fff; }
+
+/* PHOTO UPLOAD */
+.photo-box {
+  border: 2px dashed var(--borda); border-radius: 8px;
+  min-height: 90px; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 5px; cursor: pointer; position: relative;
+  overflow: hidden; transition: border-color .2s, background .2s;
+}
+.photo-box:hover, .photo-box:active { border-color: var(--verde); background: #f0fff5; }
+.photo-box input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.photo-box img { max-height: 80px; max-width: 100%; object-fit: contain; border-radius: 4px; }
+.photo-box .ph { font-size: .82rem; color: #aaa; text-align: center; }
+.photo-box .ph span { font-size: 1.6rem; display: block; margin-bottom: 2px; }
+
+/* TIPO */
+.tipo-wrap { display: flex; gap: 8px; }
+.tipo-btn {
+  flex: 1; padding: 10px 6px; border: 2px solid var(--borda); border-radius: 7px;
+  background: #fafafa; font-size: .85rem; font-weight: 700; cursor: pointer; text-align: center;
+  transition: all .15s; user-select: none; -webkit-user-select: none;
+}
+.t-fan.on  { border-color: var(--amarelo); background: #fffbea; color: #7a6000; }
+.t-jog.on  { border-color: var(--verde);   background: #edfbf2; color: var(--verde); }
+
+/* ADD BTN */
+.btn-add {
+  width: 100%; margin-top: 13px; padding: 13px;
+  background: var(--verde); color: white; border: none; border-radius: 8px;
+  font-size: .95rem; font-weight: 800; cursor: pointer; letter-spacing: .3px;
+}
+.btn-add:active { background: #155e30; }
+
+/* SUMMARY */
+.summary {
+  background: var(--amarelo); padding: 9px 18px;
+  display: flex; justify-content: space-between;
+  font-weight: 800; font-size: .85rem;
+}
+
+/* TABLE */
+.tbl-wrap { padding: 12px 10px 100px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 5px rgba(0,0,0,.08); min-width: 600px; }
+thead tr { background: var(--verde); }
+thead th { padding: 9px 7px; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .7px; color: white; text-align: center; }
+tbody tr { border-bottom: 1px solid #eee; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-align: middle; }
+.thumb { width: 55px; height: 55px; object-fit: contain; border-radius: 4px; border: 1px solid #e8e8e8; }
+.no-img { width: 55px; height: 55px; background: #f2f2f2; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: .6rem; color: #bbb; margin: 0 auto; }
+.badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: .7rem; font-weight: 800; }
+.bf { background: #fffbea; color: #7a6000; border: 1.5px solid #f5c800; }
+.bj { background: #edfbf2; color: #1a7a3c; border: 1.5px solid #1a7a3c; }
+.sz { background: #f0f0f0; border-radius: 4px; padding: 3px 10px; font-weight: 800; font-size: .8rem; display: inline-block; }
+.qty-ctrl { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.qty-ctrl button { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #ddd; background: #f5f5f5; cursor: pointer; font-size: .85rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.qty-ctrl button:active { background: var(--verde); color: white; border-color: var(--verde); }
+.qty-ctrl span { font-weight: 800; min-width: 18px; text-align: center; }
+.del-btn { background: none; border: none; color: #ddd; font-size: 1rem; cursor: pointer; padding: 4px; }
+.del-btn:active { color: var(--vermelho); }
+
+/* EMPTY */
+.empty { text-align: center; padding: 36px 16px; color: #bbb; }
+.empty .icon { font-size: 2.2rem; margin-bottom: 8px; }
+
+/* BOTTOM */
+.bottom {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; border-top: 1.5px solid #e8e8e8;
+  padding: 10px 14px; display: flex; gap: 8px; z-index: 100;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+.action-btn {
+  flex: 1; padding: 13px 8px; border: none; border-radius: 8px;
+  font-size: .82rem; font-weight: 800; cursor: pointer; letter-spacing: .2px;
+}
+.btn-img  { background: #25D366; color: white; flex: 2; }
+.btn-img:active { background: #1da851; }
+.btn-pdf  { background: var(--verde); color: white; }
+.btn-pdf:active { background: #155e30; }
+.btn-clr  { background: #f0f0f0; color: #666; border: 1.5px solid #ddd; }
+.btn-clr:active { background: #fee; color: var(--vermelho); }
+
+/* OVERLAY */
+.overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 200; align-items: center; justify-content: center;
+}
+.overlay.on { display: flex; }
+.overlay-box {
+  background: white; border-radius: 14px; padding: 22px 20px;
+  max-width: 320px; width: 90%; text-align: center;
+}
+.overlay-box h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+.overlay-box p  { font-size: .85rem; color: #555; line-height: 1.5; margin-bottom: 16px; }
+.overlay-box img { max-width: 100%; border-radius: 8px; border: 1px solid #e8e8e8; margin-bottom: 14px; max-height: 260px; object-fit: contain; }
+.ov-btns { display: flex; gap: 8px; }
+.ov-btns button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: .85rem; font-weight: 800; cursor: pointer; }
+.ov-share { background: #25D366; color: white; }
+.ov-save  { background: var(--verde); color: white; }
+.ov-close { background: #f0f0f0; color: #555; }
+
+/* CAPTURE DIV */
+#capture-area {
+  position: fixed; left: -9999px; top: 0;
+  background: white; padding: 16px; width: 700px;
+  font-family: Arial, sans-serif;
+}
+#capture-area .cap-header {
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 3px solid #1a7a3c; padding-bottom: 10px; margin-bottom: 12px;
+}
+#capture-area .cap-logo {
+  background: #1a7a3c; color: white; padding: 6px 14px;
+  border-radius: 6px; font-weight: 800; font-size: 1rem;
+}
+#capture-area .cap-info { font-size: .82rem; color: #666; }
+#capture-area table { width: 100%; border-collapse: collapse; border: 1.5px solid #ccc; }
+#capture-area thead tr { background: #1a7a3c; }
+#capture-area thead th { color: white; padding: 9px 8px; font-size: .72rem; font-weight: 800; text-align: center; text-transform: uppercase; }
+#capture-area tbody tr { border-bottom: 1px solid #e8e8e8; }
+#capture-area tbody td { padding: 10px 8px; text-align: center; vertical-align: middle; font-size: .82rem; }
+#capture-area .cap-total { text-align: right; margin-top: 10px; font-weight: 800; font-size: .9rem; color: #1a7a3c; border-top: 2px solid #e8e8e8; padding-top: 8px; }
+
+@media print {
+  header, .form-card, .bottom, .summary, #capture-area { display: none !important; }
+  body { background: white; }
+  .tbl-wrap { padding: 0; overflow: visible; }
+  table { min-width: unset; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div><h1>⚽ Passos Sports</h1><span>Gerador de Pedidos</span></div>
+  <span id="hdr-count">0 itens</span>
+</header>
+
+<!-- FORM -->
+<div class="form-card">
+  <h2>+ Nova Camisa</h2>
+  <div class="grid">
+
+    <div class="full">
+      <label>Foto da Camisa</label>
+      <div class="photo-box" id="photo-box">
+        <input type="file" accept="image/*" onchange="onPhoto(this)">
+        <div class="ph" id="ph-placeholder"><span>📷</span>Toque para foto</div>
+        <img id="ph-preview" style="display:none">
+      </div>
+    </div>
+
+    <div class="full">
+      <label>Tipo</label>
+      <div class="tipo-wrap">
+        <div class="tipo-btn t-fan on" id="btn-fan" onclick="setTipo('fan')">👕 Fã</div>
+        <div class="tipo-btn t-jog" id="btn-jog" onclick="setTipo('jogador')">⭐ Jogador</div>
+      </div>
+    </div>
+
+    <div class="full">
+      <label>Time / Modelo</label>
+      <input type="text" id="f-time" placeholder="Ex: Brasil Away 2026, Flamengo Home...">
+    </div>
+
+    <div>
+      <label>Nome (opcional)</label>
+      <input type="text" id="f-nome" placeholder="Ex: Marta">
+    </div>
+
+    <div>
+      <label>Número (opcional)</label>
+      <input type="number" id="f-num" placeholder="10" min="1" max="99">
+    </div>
+
+    <div>
+      <label>Tamanho</label>
+      <select id="f-tam">
+        <option value="">— selecione —</option>
+        <option>S</option><option>M</option><option>L</option>
+        <option>XL</option><option>XXL</option><option>2 XXL</option><option>3XL</option>
+        <option>Infantil 6</option><option>Infantil 8</option><option>Infantil 10</option>
+        <option>Infantil 12</option><option>Infantil 14</option><option>Infantil 16</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Quantidade</label>
+      <input type="number" id="f-qty" value="1" min="1" max="99">
+    </div>
+
+    <div class="full">
+      <label>Observação (opcional)</label>
+      <input type="text" id="f-obs" placeholder="Ex: manga longa, patch, away...">
+    </div>
+
+  </div>
+  <button class="btn-add" onclick="addItem()">✅ Adicionar ao Pedido</button>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary">
+  <span>📦 Total do pedido</span>
+  <span id="sum-total">0 peças</span>
+</div>
+
+<!-- TABLE -->
+<div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Time/Modelo</th>
+        <th>Tipo</th>
+        <th>Nome/Nº</th>
+        <th>Tamanho</th>
+        <th>Qtd</th>
+        <th>Obs</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- BOTTOM -->
+<div class="bottom">
+  <button class="action-btn btn-img" id="btn-share" onclick="gerarImagem()">📷 Gerar & Enviar</button>
+  <button class="action-btn btn-pdf" onclick="window.print()">🖨️</button>
+  <button class="action-btn btn-clr" onclick="limpar()">🗑️</button>
+</div>
+
+<!-- OVERLAY with image preview -->
+<div class="overlay" id="overlay">
+  <div class="overlay-box">
+    <h3>📋 Pedido Gerado!</h3>
+    <p>👉 <strong>Compartilhar</strong>: abre o menu do iPhone<br>👉 <strong>Ver & Salvar</strong>: abre a imagem em tela cheia — pressione e segure para salvar na galeria</p>
+    <img id="ov-img" src="" alt="pedido">
+    <div class="ov-btns">
+      <button class="ov-share" onclick="compartilhar()">📲 Compartilhar</button>
+      <button class="ov-save"  onclick="abrirImagem()">🔍 Ver & Salvar</button>
+      <button class="ov-close" onclick="fecharOverlay()">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAPTURE AREA -->
+<div id="capture-area">
+  <div class="cap-header">
+    <div class="cap-logo">⚽ PASSOS SPORTS</div>
+    <div class="cap-info">
+      <strong>Pedido de Camisas</strong><br>
+      <span id="cap-date"></span>
+    </div>
+  </div>
+  <div id="cap-table"></div>
+  <div class="cap-total" id="cap-total-txt"></div>
+</div>
+
+<script>
+let orders = JSON.parse(localStorage.getItem('ps_orders') || '[]');
+let selImg = null;
+let selTipo = 'fan';
+let generatedImgData = null;
+
+render();
+
+function onPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    selImg = e.target.result;
+    document.getElementById('ph-preview').src = selImg;
+    document.getElementById('ph-preview').style.display = 'block';
+    document.getElementById('ph-placeholder').style.display = 'none';
+  };
+  r.readAsDataURL(file);
+}
+
+function setTipo(t) {
+  selTipo = t;
+  document.getElementById('btn-fan').className = 'tipo-btn t-fan' + (t === 'fan' ? ' on' : '');
+  document.getElementById('btn-jog').className = 'tipo-btn t-jog' + (t === 'jogador' ? ' on' : '');
+}
+
+function addItem() {
+  const tam = document.getElementById('f-tam').value;
+  if (!tam) { alert('Selecione o tamanho!'); return; }
+  orders.push({
+    id: Date.now(),
+    img: selImg,
+    tipo: selTipo,
+    time: document.getElementById('f-time').value.trim(),
+    nome: document.getElementById('f-nome').value.trim(),
+    num:  document.getElementById('f-num').value.trim(),
+    tam,
+    qty:  parseInt(document.getElementById('f-qty').value) || 1,
+    obs:  document.getElementById('f-obs').value.trim(),
+  });
+  save(); render(); resetForm();
+}
+
+function resetForm() {
+  selImg = null; selTipo = 'fan';
+  document.getElementById('ph-preview').style.display = 'none';
+  document.getElementById('ph-placeholder').style.display = 'flex';
+  document.getElementById('photo-box').querySelector('input').value = '';
+  ['f-time','f-nome','f-num','f-obs'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-tam').value = '';
+  document.getElementById('f-qty').value = '1';
+  setTipo('fan');
+}
+
+function delItem(id) { orders = orders.filter(o => o.id !== id); save(); render(); }
+function chgQty(id, d) {
+  const o = orders.find(x => x.id === id);
+  if (o) { o.qty = Math.max(1, o.qty + d); save(); render(); }
+}
+
+function render() {
+  const total = orders.reduce((s, o) => s + o.qty, 0);
+  document.getElementById('hdr-count').textContent = orders.length + (orders.length === 1 ? ' item' : ' itens');
+  document.getElementById('sum-total').textContent = total + ' peça' + (total !== 1 ? 's' : '');
+
+  const tbody = document.getElementById('tbody');
+  if (orders.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="icon">👕</div><p>Nenhuma camisa ainda.<br>Adicione acima!</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td>${o.img ? `<img class="thumb" src="${o.img}">` : `<div class="no-img">Sem foto</div>`}</td>
+      <td style="font-size:.78rem;font-weight:600;max-width:90px;word-break:break-word;">${o.time || '<span style="color:#ccc">—</span>'}</td>
+      <td><span class="badge ${o.tipo==='jogador'?'bj':'bf'}">${o.tipo==='jogador'?'Jogador':'Fã'}</span></td>
+      <td>${o.nome?`<div style="font-size:.78rem">${o.nome}</div>`:''}${o.num?`<div style="font-size:1.1rem;font-weight:800">${o.num}</div>`:''}${!o.nome&&!o.num?'<span style="color:#ccc">—</span>':''}</td>
+      <td><span class="sz">${o.tam}</span></td>
+      <td><div class="qty-ctrl"><button onclick="chgQty(${o.id},-1)">−</button><span>${o.qty}</span><button onclick="chgQty(${o.id},+1)">+</button></div></td>
+      <td style="font-size:.72rem;color:#777;max-width:80px">${o.obs||'<span style="color:#ccc">—</span>'}</td>
+      <td><button class="del-btn" onclick="delItem(${o.id})">✕</button></td>
+    </tr>`).join('');
+}
+
+function save() { localStorage.setItem('ps_orders', JSON.stringify(orders)); }
+
+function limpar() {
+  if (!orders.length) return;
+  if (confirm('Limpar todo o pedido?')) { orders = []; save(); render(); }
+}
+
+// ── IMAGE GENERATION ──
+function buildCaptureHTML() {
+  const total = orders.reduce((s, o) => s + o.qty, 0);
+  document.getElementById('cap-date').textContent = 'Data: ' + new Date().toLocaleDateString('pt-BR');
+  document.getElementById('cap-total-txt').textContent = 'TOTAL: ' + total + ' peça' + (total !== 1 ? 's' : '');
+
+  const rows = orders.map((o, i) => {
+    const imgCell = o.img
+      ? `<img src="${o.img}" style="width:72px;height:72px;object-fit:contain;border:1px solid #ddd;border-radius:4px;">`
+      : `<div style="width:72px;height:72px;background:#f2f2f2;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#bbb;margin:0 auto;">Sem foto</div>`;
+    const bg  = o.tipo==='jogador' ? '#edfbf2' : '#fffbea';
+    const cor = o.tipo==='jogador' ? '#1a7a3c' : '#7a6000';
+    const brd = o.tipo==='jogador' ? '#1a7a3c' : '#f5c800';
+    return `<tr style="border-bottom:1px solid #eee;">
+      <td style="padding:10px 8px;text-align:center;">${imgCell}</td>
+      <td style="padding:10px 8px;font-size:.8rem;font-weight:600;">${o.time||'—'}</td>
+      <td style="padding:10px 8px;text-align:center;">
+        <span style="background:${bg};color:${cor};border:1.5px solid ${brd};border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:800;">${o.tipo==='jogador'?'Jogador':'Fã'}</span>
+      </td>
+      <td style="padding:10px 8px;text-align:center;">
+        ${o.nome?`<div style="font-size:.8rem">${o.nome}</div>`:''}
+        ${o.num?`<div style="font-size:1.2rem;font-weight:800">${o.num}</div>`:''}
+        ${!o.nome&&!o.num?'—':''}
+      </td>
+      <td style="padding:10px 8px;text-align:center;">
+        <span style="background:#f0f0f0;border-radius:4px;padding:4px 12px;font-weight:800;font-size:.82rem;">${o.tam}</span>
+      </td>
+      <td style="padding:10px 8px;text-align:center;font-size:1rem;font-weight:800;">${o.qty}</td>
+      <td style="padding:10px 8px;font-size:.75rem;color:#777;">${o.obs||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('cap-table').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>FOTO</th><th>TIME/MODELO</th><th>TIPO</th>
+        <th>NOME/Nº</th><th>TAMANHO</th><th>QTD</th><th>OBS</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+async function gerarImagem() {
+  if (!orders.length) { alert('Adicione itens ao pedido primeiro!'); return; }
+
+  const btn = document.getElementById('btn-share');
+  btn.textContent = '⏳ Gerando...';
+  btn.disabled = true;
+
+  buildCaptureHTML();
+  await new Promise(r => setTimeout(r, 500));
+
+  try {
+    const area = document.getElementById('capture-area');
+    const canvas = await html2canvas(area, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      imageTimeout: 20000
+    });
+
+    generatedImgData = canvas.toDataURL('image/png');
+
+    btn.textContent = '📷 Gerar & Enviar';
+    btn.disabled = false;
+
+    // Show overlay with preview
+    document.getElementById('ov-img').src = generatedImgData;
+    document.getElementById('overlay').classList.add('on');
+
+  } catch(e) {
+    btn.textContent = '📷 Gerar & Enviar';
+    btn.disabled = false;
+    alert('Erro ao gerar imagem: ' + e.message);
+  }
+}
+
+async function compartilhar() {
+  try {
+    const blob = await (await fetch(generatedImgData)).blob();
+    const file = new File([blob], 'pedido-passos-sports.png', { type: 'image/png' });
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      fecharOverlay();
+      await navigator.share({ files: [file], title: 'Pedido Passos Sports' });
+    } else {
+      // Fallback: open in new tab for long-press save
+      const w = window.open('', '_blank');
+      fecharOverlay();
+      if (w) {
+        w.document.write(`<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;}img{max-width:100%;}</style></head><body><img src="${generatedImgData}"></body></html>`);
+        w.document.close();
+      }
+    }
+  } catch(e) {
+    if (e.name !== 'AbortError') alert('Erro: ' + e.message);
+  }
+}
+
+async function salvarGaleria() {
+  try {
+    const blob = await (await fetch(generatedImgData)).blob();
+    const file = new File([blob], 'pedido-passos-sports.png', { type: 'image/png' });
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      fecharOverlay();
+      await navigator.share({ files: [file], title: 'Pedido Passos Sports' });
+    } else {
+      const a = document.createElement('a');
+      a.href = generatedImgData;
+      a.download = 'pedido-passos-sports.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      fecharOverlay();
+    }
+  } catch(e) {
+    if (e.name !== 'AbortError') alert('Erro: ' + e.message);
+  }
+}
+
+function abrirImagem() {
+  fecharOverlay();
+  // Open fullscreen image page — user long-presses to save to Photos
+  const w = window.open('', '_blank');
+  if (w) {
+    w.document.write(`<!DOCTYPE html>
+<html><head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pedido Passos Sports</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#111; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:16px; gap:14px; }
+  .tip {
+    background:#1a7a3c; color:white; border-radius:10px; padding:12px 16px;
+    font-family:Arial,sans-serif; font-size:.9rem; text-align:center; line-height:1.5; width:100%;
+  }
+  .tip strong { display:block; font-size:1rem; margin-bottom:4px; }
+  img { width:100%; border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.5); }
+  .wa-btn {
+    background:#25D366; color:white; border:none; border-radius:10px;
+    padding:14px 20px; font-size:1rem; font-weight:800; width:100%; cursor:pointer;
+    font-family:Arial,sans-serif;
+  }
+</style>
+</head><body>
+  <div class="tip">
+    <strong>📲 Como enviar pelo WhatsApp:</strong>
+    1. Pressione e segure a imagem abaixo<br>
+    2. Toque em "Salvar na Galeria"<br>
+    3. Abra o WhatsApp e envie do rolo de câmera
+  </div>
+  <img src="${generatedImgData}" alt="Pedido Passos Sports">
+  <button class="wa-btn" onclick="window.open('https://wa.me/8613070274743','_blank')">
+    📱 Abrir WhatsApp do Fornecedor
+  </button>
+</body></html>`);
+    w.document.close();
+  }
+}
+
+function fecharOverlay() {
+  document.getElementById('overlay').classList.remove('on');
+}
+</script>
+</body>
+</html>
