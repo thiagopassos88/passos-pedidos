@@ -69,6 +69,8 @@ input:focus, select:focus { border-color: var(--verde); background: #fff; }
 }
 .t-fan.on  { border-color: var(--amarelo); background: #fffbea; color: #7a6000; }
 .t-jog.on  { border-color: var(--verde);   background: #edfbf2; color: var(--verde); }
+.t-reg.on  { border-color: #2980b9; background: #eaf4fb; color: #2980b9; }
+.t-rap.on  { border-color: #e67e22; background: #fef5ec; color: #e67e22; }
 
 /* ADD BTN */
 .btn-add {
@@ -243,6 +245,14 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
       <input type="text" id="f-obs" placeholder="Ex: manga longa, patch, away...">
     </div>
 
+    <div class="full">
+      <label>Tipo de Entrega</label>
+      <div class="tipo-wrap">
+        <div class="tipo-btn t-reg on" id="btn-reg" onclick="setEntrega('regular')">🚢 Entrega Regular</div>
+        <div class="tipo-btn t-rap" id="btn-rap" onclick="setEntrega('rapida')">✈️ Entrega Rápida</div>
+      </div>
+    </div>
+
   </div>
   <button class="btn-add" onclick="addItem()">✅ Adicionar ao Pedido</button>
 </div>
@@ -264,6 +274,7 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
         <th>Nome/Nº</th>
         <th>Tamanho</th>
         <th>Qtd</th>
+        <th>Entrega</th>
         <th>Obs</th>
         <th></th>
       </tr>
@@ -310,6 +321,7 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
 let orders = JSON.parse(localStorage.getItem('ps_orders') || '[]');
 let selImg = null;
 let selTipo = 'fan';
+let selEntrega = 'regular';
 let generatedImgData = null;
 
 render();
@@ -333,6 +345,12 @@ function setTipo(t) {
   document.getElementById('btn-jog').className = 'tipo-btn t-jog' + (t === 'jogador' ? ' on' : '');
 }
 
+function setEntrega(e) {
+  selEntrega = e;
+  document.getElementById('btn-reg').className = 'tipo-btn t-reg' + (e === 'regular' ? ' on' : '');
+  document.getElementById('btn-rap').className = 'tipo-btn t-rap' + (e === 'rapida' ? ' on' : '');
+}
+
 function addItem() {
   const tam = document.getElementById('f-tam').value;
   if (!tam) { alert('Selecione o tamanho!'); return; }
@@ -346,6 +364,7 @@ function addItem() {
     tam,
     qty:  parseInt(document.getElementById('f-qty').value) || 1,
     obs:  document.getElementById('f-obs').value.trim(),
+    entrega: selEntrega,
   });
   save(); render(); resetForm();
 }
@@ -359,6 +378,7 @@ function resetForm() {
   document.getElementById('f-tam').value = '';
   document.getElementById('f-qty').value = '1';
   setTipo('fan');
+  setEntrega('regular');
 }
 
 function delItem(id) { orders = orders.filter(o => o.id !== id); save(); render(); }
@@ -385,6 +405,7 @@ function render() {
       <td>${o.nome?`<div style="font-size:.78rem">${o.nome}</div>`:''}${o.num?`<div style="font-size:1.1rem;font-weight:800">${o.num}</div>`:''}${!o.nome&&!o.num?'<span style="color:#ccc">—</span>':''}</td>
       <td><span class="sz">${o.tam}</span></td>
       <td><div class="qty-ctrl"><button onclick="chgQty(${o.id},-1)">−</button><span>${o.qty}</span><button onclick="chgQty(${o.id},+1)">+</button></div></td>
+      <td><span style="font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:12px;${o.entrega==='rapida'?'background:#fef5ec;color:#e67e22;border:1.5px solid #e67e22':'background:#eaf4fb;color:#2980b9;border:1.5px solid #2980b9'}">${o.entrega==='rapida'?'✈️ Rápida':'🚢 Regular'}</span></td>
       <td style="font-size:.72rem;color:#777;max-width:80px">${o.obs||'<span style="color:#ccc">—</span>'}</td>
       <td><button class="del-btn" onclick="delItem(${o.id})">✕</button></td>
     </tr>`).join('');
@@ -433,7 +454,7 @@ function buildCaptureHTML() {
     <table>
       <thead><tr>
         <th>FOTO</th><th>TIME/MODELO</th><th>TIPO</th>
-        <th>NOME/Nº</th><th>TAMANHO</th><th>QTD</th><th>OBS</th>
+        <th>NOME/Nº</th><th>TAMANHO</th><th>QTD</th><th>ENTREGA</th><th>OBS</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
