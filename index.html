@@ -20,6 +20,41 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Segoe UI', Arial, sans-serif; background: var(--fundo); color: var(--texto); }
 
+/* LOGIN */
+.login-screen {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f3460 100%);
+}
+.login-box {
+  background: white; border-radius: 20px; padding: 32px 24px;
+  width: 88%; max-width: 340px; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.login-logos {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin-bottom: 18px;
+}
+.login-logos img { width: 52px; height: 52px; object-fit: contain; border-radius: 50%; }
+.login-logos .div { font-size: 1.4rem; color: #ddd; }
+.login-box h2 { font-size: 1.1rem; font-weight: 800; color: #1a1a1a; margin-bottom: 4px; }
+.login-box .sub { font-size: .8rem; color: #999; margin-bottom: 20px; }
+.login-field {
+  width: 100%; border: 2px solid #eee; border-radius: 10px;
+  padding: 12px 14px; font-size: .95rem; margin-bottom: 10px;
+  outline: none; text-align: center;
+  transition: border-color .2s; background: #fafafa;
+}
+.login-field:focus { border-color: #1a7a3c; background: white; }
+.login-btn-go {
+  width: 100%; padding: 13px; border: none; border-radius: 10px;
+  font-size: 1rem; font-weight: 800; cursor: pointer;
+  background: linear-gradient(135deg, #1a7a3c, #1a4a8a);
+  color: white; margin-top: 4px; transition: opacity .2s;
+}
+.login-btn-go:active { opacity: .85; }
+.login-err { color: #c0392b; font-size: .8rem; margin-top: 10px; min-height: 18px; }
+
 /* TABS */
 .tab-bar {
   display: flex; background: white;
@@ -254,8 +289,25 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
 <!-- LOGIN SCREEN -->
 
 
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logos">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q==" alt="Passos">
+      <span class="div">|</span>
+      <img src="data:image/jpeg;base64,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" alt="Chuan">
+    </div>
+    <h2>Bem-vindo! 👋</h2>
+    <p class="sub">Entre com seu usuário e senha</p>
+    <input class="login-field" id="l-user" type="text" placeholder="Usuário" autocomplete="off" autocapitalize="none">
+    <input class="login-field" id="l-pwd" type="password" placeholder="Senha" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn-go" onclick="doLogin()">Entrar →</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
 <!-- TAB BAR -->
-<div class="tab-bar" id="tab-bar">
+<div class="tab-bar" id="tab-bar" style="display:none">
   <button class="tab-btn active-passos" id="tab-passos" onclick="showTab('passos')">
     <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q=="> Passos Sports
   </button>
@@ -263,10 +315,11 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
     <img src="data:image/jpeg;base64,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"> Chuan Chen
   </button>
   
+  <button onclick="logout()" style="padding:12px 14px;border:none;background:none;color:#aaa;font-size:.72rem;cursor:pointer;font-weight:700;">Sair 🚪</button>
 </div>
 
 <!-- ═══ PASSOS SECTION ═══ -->
-<div class="section on" id="sec-passos">
+<div class="section" id="sec-passos">
   <div class="passos-header">
     <div style="display:flex;align-items:center;gap:10px;">
       <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q==" style="height:42px;width:42px;object-fit:contain;border-radius:6px;background:#000;">
@@ -496,6 +549,35 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
 </div>
 
 <script>
+// ── AUTH ──
+const USERS = {
+  'passossports': { pwd: '1365@', tab: 'passos' },
+  'chuanchen':    { pwd: '1234@', tab: 'chuan'  }
+};
+
+function doLogin() {
+  const user = document.getElementById('l-user').value.trim().toLowerCase();
+  const pwd  = document.getElementById('l-pwd').value;
+  const err  = document.getElementById('login-err');
+  if (USERS[user] && USERS[user].pwd === pwd) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('tab-bar').style.display = 'flex';
+    showTab(USERS[user].tab);
+    err.textContent = '';
+  } else {
+    err.textContent = '❌ Usuário ou senha incorretos';
+  }
+}
+
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('tab-bar').style.display = 'none';
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+  document.getElementById('l-user').value = '';
+  document.getElementById('l-pwd').value = '';
+  document.getElementById('login-err').textContent = '';
+}
+
 // ── PASSOS STATE ──
 let orders = JSON.parse(localStorage.getItem('ps_orders')||'[]');
 let selImg=null, selTipo='fan', selEntrega='regular', generatedImgData=null, generatedFor='passos';
