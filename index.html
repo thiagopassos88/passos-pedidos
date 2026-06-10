@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Passos Sports — Pedidos</title>
+<title>Passos Sports & Chen Chuan</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
   --verde: #1a7a3c;
   --amarelo: #f5c800;
+  --azul: #1a4a8a;
+  --azul-claro: #2980b9;
   --borda: #d8d8d8;
   --fundo: #f4f4f4;
   --branco: #fff;
@@ -18,79 +20,133 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Segoe UI', Arial, sans-serif; background: var(--fundo); color: var(--texto); }
 
-/* HEADER */
-header {
-  background: var(--verde); color: white;
+/* LOGIN */
+.login-screen {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  flex-direction: column; gap: 0;
+}
+.login-box {
+  background: white; border-radius: 20px; padding: 32px 28px;
+  width: 90%; max-width: 340px; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+.login-logos {
+  display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 20px;
+}
+.login-logos img {
+  width: 56px; height: 56px; object-fit: contain; border-radius: 50%;
+}
+.login-logos .divider { font-size: 1.2rem; color: #ccc; font-weight: 300; }
+.login-box h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; color: #1a1a1a; }
+.login-box p { font-size: .82rem; color: #888; margin-bottom: 20px; }
+.login-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.login-tab {
+  flex: 1; padding: 10px; border: 2px solid #eee; border-radius: 8px;
+  cursor: pointer; font-size: .82rem; font-weight: 700; text-align: center;
+  transition: all .2s; background: #fafafa;
+}
+.login-tab.active-passos { border-color: #1a7a3c; background: #edfbf2; color: #1a7a3c; }
+.login-tab.active-chuan { border-color: #1a4a8a; background: #eaf0fb; color: #1a4a8a; }
+.login-input {
+  width: 100%; border: 2px solid #eee; border-radius: 10px;
+  padding: 12px 14px; font-size: 1rem; margin-bottom: 12px;
+  outline: none; text-align: center; letter-spacing: 2px;
+  transition: border-color .2s;
+}
+.login-input:focus { border-color: #1a7a3c; }
+.login-btn {
+  width: 100%; padding: 13px; border: none; border-radius: 10px;
+  font-size: .95rem; font-weight: 800; cursor: pointer;
+  transition: all .2s;
+}
+.login-btn-passos { background: #1a7a3c; color: white; }
+.login-btn-chuan  { background: #1a4a8a; color: white; }
+.login-error { color: #c0392b; font-size: .8rem; margin-top: 8px; display: none; }
+
+/* TABS */
+.tab-bar {
+  display: flex; background: white;
+  border-bottom: 2px solid #eee; position: sticky; top: 0; z-index: 99;
+}
+.tab-btn {
+  flex: 1; padding: 12px 8px; border: none; background: none;
+  font-size: .78rem; font-weight: 700; cursor: pointer; color: #999;
+  border-bottom: 3px solid transparent; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.tab-btn img { width: 22px; height: 22px; object-fit: contain; border-radius: 50%; }
+.tab-btn.active-passos { color: #1a7a3c; border-bottom-color: #1a7a3c; }
+.tab-btn.active-chuan  { color: #1a4a8a; border-bottom-color: #1a4a8a; }
+
+/* SECTIONS */
+.section { display: none; }
+.section.on { display: block; }
+
+/* ═══ PASSOS SECTION ═══ */
+.passos-header {
+  background: #1a7a3c; color: white;
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 18px;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
 }
-header h1 { font-size: 1.05rem; font-weight: 800; }
-header span { font-size: .75rem; opacity: .85; }
+.passos-header h1 { font-size: 1.05rem; font-weight: 800; }
+.passos-header span { font-size: .75rem; opacity: .85; }
 
-/* FORM */
 .form-card {
-  background: var(--branco);
-  border-bottom: 3px solid var(--amarelo);
+  background: white; border-bottom: 3px solid #f5c800;
   padding: 16px 16px 18px;
 }
-.form-card h2 { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--verde); margin-bottom: 13px; }
+.form-card h2 { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #1a7a3c; margin-bottom: 13px; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .full { grid-column: 1 / -1; }
-
 label { display: block; font-size: .68rem; font-weight: 700; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
 input, select {
-  width: 100%; border: 1.5px solid var(--borda); border-radius: 7px;
-  padding: 10px 11px; font-size: .9rem; background: #fafafa; color: var(--texto);
+  width: 100%; border: 1.5px solid #d8d8d8; border-radius: 7px;
+  padding: 10px 11px; font-size: .9rem; background: #fafafa; color: #1a1a1a;
   outline: none; -webkit-appearance: none; appearance: none;
 }
-input:focus, select:focus { border-color: var(--verde); background: #fff; }
+input:focus, select:focus { border-color: #1a7a3c; background: white; }
 
-/* PHOTO UPLOAD */
 .photo-box {
-  border: 2px dashed var(--borda); border-radius: 8px;
+  border: 2px dashed #d8d8d8; border-radius: 8px;
   min-height: 90px; display: flex; align-items: center; justify-content: center;
   flex-direction: column; gap: 5px; cursor: pointer; position: relative;
-  overflow: hidden; transition: border-color .2s, background .2s;
+  overflow: hidden; transition: all .2s;
 }
-.photo-box:hover, .photo-box:active { border-color: var(--verde); background: #f0fff5; }
+.photo-box:hover { border-color: #1a7a3c; background: #f0fff5; }
 .photo-box input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .photo-box img { max-height: 80px; max-width: 100%; object-fit: contain; border-radius: 4px; }
 .photo-box .ph { font-size: .82rem; color: #aaa; text-align: center; }
 .photo-box .ph span { font-size: 1.6rem; display: block; margin-bottom: 2px; }
 
-/* TIPO */
 .tipo-wrap { display: flex; gap: 8px; }
 .tipo-btn {
-  flex: 1; padding: 10px 6px; border: 2px solid var(--borda); border-radius: 7px;
+  flex: 1; padding: 10px 6px; border: 2px solid #d8d8d8; border-radius: 7px;
   background: #fafafa; font-size: .85rem; font-weight: 700; cursor: pointer; text-align: center;
   transition: all .15s; user-select: none; -webkit-user-select: none;
 }
-.t-fan.on  { border-color: var(--amarelo); background: #fffbea; color: #7a6000; }
-.t-jog.on  { border-color: var(--verde);   background: #edfbf2; color: var(--verde); }
+.t-fan.on  { border-color: #f5c800; background: #fffbea; color: #7a6000; }
+.t-jog.on  { border-color: #1a7a3c; background: #edfbf2; color: #1a7a3c; }
 .t-reg.on  { border-color: #2980b9; background: #eaf4fb; color: #2980b9; }
 .t-rap.on  { border-color: #e67e22; background: #fef5ec; color: #e67e22; }
 
-/* ADD BTN */
 .btn-add {
   width: 100%; margin-top: 13px; padding: 13px;
-  background: var(--verde); color: white; border: none; border-radius: 8px;
-  font-size: .95rem; font-weight: 800; cursor: pointer; letter-spacing: .3px;
+  background: #1a7a3c; color: white; border: none; border-radius: 8px;
+  font-size: .95rem; font-weight: 800; cursor: pointer;
 }
 .btn-add:active { background: #155e30; }
 
-/* SUMMARY */
 .summary {
-  background: var(--amarelo); padding: 9px 18px;
+  background: #f5c800; padding: 9px 18px;
   display: flex; justify-content: space-between;
   font-weight: 800; font-size: .85rem;
 }
 
-/* TABLE */
 .tbl-wrap { padding: 12px 10px 100px; overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 5px rgba(0,0,0,.08); min-width: 600px; }
-thead tr { background: var(--verde); }
+thead tr { background: #1a7a3c; }
 thead th { padding: 9px 7px; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .7px; color: white; text-align: center; }
 tbody tr { border-bottom: 1px solid #eee; }
 tbody tr:last-child { border-bottom: none; }
@@ -103,16 +159,13 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
 .sz { background: #f0f0f0; border-radius: 4px; padding: 3px 10px; font-weight: 800; font-size: .8rem; display: inline-block; }
 .qty-ctrl { display: flex; align-items: center; justify-content: center; gap: 5px; }
 .qty-ctrl button { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #ddd; background: #f5f5f5; cursor: pointer; font-size: .85rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-.qty-ctrl button:active { background: var(--verde); color: white; border-color: var(--verde); }
+.qty-ctrl button:active { background: #1a7a3c; color: white; border-color: #1a7a3c; }
 .qty-ctrl span { font-weight: 800; min-width: 18px; text-align: center; }
 .del-btn { background: none; border: none; color: #ddd; font-size: 1rem; cursor: pointer; padding: 4px; }
-.del-btn:active { color: var(--vermelho); }
-
-/* EMPTY */
+.del-btn:active { color: #c0392b; }
 .empty { text-align: center; padding: 36px 16px; color: #bbb; }
 .empty .icon { font-size: 2.2rem; margin-bottom: 8px; }
 
-/* BOTTOM */
 .bottom {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: white; border-top: 1.5px solid #e8e8e8;
@@ -121,14 +174,59 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
 }
 .action-btn {
   flex: 1; padding: 13px 8px; border: none; border-radius: 8px;
-  font-size: .82rem; font-weight: 800; cursor: pointer; letter-spacing: .2px;
+  font-size: .82rem; font-weight: 800; cursor: pointer;
 }
 .btn-img  { background: #25D366; color: white; flex: 2; }
-.btn-img:active { background: #1da851; }
-.btn-pdf  { background: var(--verde); color: white; }
-.btn-pdf:active { background: #155e30; }
+.btn-pdf  { background: #1a7a3c; color: white; }
 .btn-clr  { background: #f0f0f0; color: #666; border: 1.5px solid #ddd; }
-.btn-clr:active { background: #fee; color: var(--vermelho); }
+
+/* ═══ CHUAN SECTION ═══ */
+.chuan-header {
+  background: linear-gradient(135deg, #1a3a6a, #1a4a8a);
+  color: white; display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+}
+.chuan-header h1 { font-size: 1.05rem; font-weight: 800; }
+.chuan-header span { font-size: .75rem; opacity: .85; }
+
+.chuan-form {
+  background: white; border-bottom: 3px solid #1a4a8a;
+  padding: 16px 16px 18px;
+}
+.chuan-form h2 { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #1a4a8a; margin-bottom: 13px; }
+.chuan-form input:focus, .chuan-form select:focus { border-color: #1a4a8a; }
+
+.btn-chuan-add {
+  width: 100%; margin-top: 13px; padding: 13px;
+  background: #1a4a8a; color: white; border: none; border-radius: 8px;
+  font-size: .95rem; font-weight: 800; cursor: pointer;
+}
+.btn-chuan-add:active { background: #0f2d5c; }
+
+.chuan-summary {
+  background: #1a4a8a; color: white; padding: 9px 18px;
+  display: flex; justify-content: space-between;
+  font-weight: 800; font-size: .85rem;
+}
+
+.chuan-bottom {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; border-top: 1.5px solid #e8e8e8;
+  padding: 10px 14px; display: flex; gap: 8px; z-index: 100;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+.btn-chuan-img { background: #25D366; color: white; flex: 2; }
+.btn-chuan-clr { background: #f0f0f0; color: #666; border: 1.5px solid #ddd; }
+
+.chuan-tbl-wrap { padding: 12px 10px 100px; overflow-x: auto; }
+.chuan-tbl-wrap thead tr { background: #1a4a8a; }
+
+/* STATUS BADGE */
+.status-select {
+  border: 2px solid #1a4a8a; border-radius: 6px; padding: 4px 8px;
+  font-size: .75rem; font-weight: 700; color: #1a4a8a; background: white;
+  cursor: pointer;
+}
 
 /* OVERLAY */
 .overlay {
@@ -146,10 +244,10 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
 .ov-btns { display: flex; gap: 8px; }
 .ov-btns button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: .85rem; font-weight: 800; cursor: pointer; }
 .ov-share { background: #25D366; color: white; }
-.ov-save  { background: var(--verde); color: white; }
+.ov-open  { background: #1a4a8a; color: white; }
 .ov-close { background: #f0f0f0; color: #555; }
 
-/* CAPTURE DIV */
+/* CAPTURE */
 #capture-area {
   position: fixed; left: -9999px; top: 0;
   background: white; padding: 16px; width: 700px;
@@ -163,7 +261,6 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
   background: #1a7a3c; color: white; padding: 6px 14px;
   border-radius: 6px; font-weight: 800; font-size: 1rem;
 }
-#capture-area .cap-info { font-size: .82rem; color: #666; }
 #capture-area table { width: 100%; border-collapse: collapse; border: 1.5px solid #ccc; }
 #capture-area thead tr { background: #1a7a3c; }
 #capture-area thead th { color: white; padding: 9px 8px; font-size: .72rem; font-weight: 800; text-align: center; text-transform: uppercase; }
@@ -171,150 +268,269 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
 #capture-area tbody td { padding: 10px 8px; text-align: center; vertical-align: middle; font-size: .82rem; }
 #capture-area .cap-total { text-align: right; margin-top: 10px; font-weight: 800; font-size: .9rem; color: #1a7a3c; border-top: 2px solid #e8e8e8; padding-top: 8px; }
 
-@media print {
-  header, .form-card, .bottom, .summary, #capture-area { display: none !important; }
-  body { background: white; }
-  .tbl-wrap { padding: 0; overflow: visible; }
-  table { min-width: unset; box-shadow: none; }
+#chuan-capture {
+  position: fixed; left: -9999px; top: 0;
+  background: white; padding: 20px; width: 700px;
+  font-family: Arial, sans-serif;
+}
+#chuan-capture .cc-header {
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, #1a3a6a, #1a4a8a);
+  padding: 14px 16px; border-radius: 10px; margin-bottom: 16px;
+}
+#chuan-capture .cc-logo-wrap img { width: 50px; height: 50px; border-radius: 50%; object-fit: contain; }
+#chuan-capture .cc-title { color: white; }
+#chuan-capture .cc-title h2 { font-size: 1.1rem; font-weight: 800; }
+#chuan-capture .cc-title p { font-size: .78rem; opacity: .85; }
+#chuan-capture table { width: 100%; border-collapse: collapse; border: 1.5px solid #ccc; }
+#chuan-capture thead tr { background: #1a4a8a; }
+#chuan-capture thead th { color: white; padding: 9px 8px; font-size: .72rem; font-weight: 800; text-align: center; }
+#chuan-capture tbody tr { border-bottom: 1px solid #e8e8e8; }
+#chuan-capture tbody td { padding: 10px 8px; text-align: center; vertical-align: middle; font-size: .82rem; }
+#chuan-capture .cc-footer {
+  margin-top: 14px; padding: 12px 14px; background: #f0f4fb;
+  border-radius: 8px; border-left: 4px solid #1a4a8a;
+  font-size: .82rem; color: #333;
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q==" alt="Passos Sports" style="height:42px;width:42px;object-fit:contain;border-radius:6px;background:#000;">
-    <div><h1>Passos Sports</h1><span>Gerador de Pedidos</span></div>
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logos">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q==" alt="Passos">
+      <span class="divider">|</span>
+      <img src="data:image/jpeg;base64,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" alt="Chuan">
+    </div>
+    <h2>Bem-vindo!</h2>
+    <p>Selecione sua conta e entre com sua senha</p>
+    <div class="login-tabs">
+      <div class="login-tab active-passos" id="lt-passos" onclick="selectUser('passos')">⚽ Passos Sports</div>
+      <div class="login-tab" id="lt-chuan" onclick="selectUser('chuan')">🏆 Chuan Chen</div>
+    </div>
+    <input type="password" class="login-input" id="login-pwd" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn login-btn-passos" id="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error">❌ Senha incorreta</div>
   </div>
-  <span id="hdr-count">0 itens</span>
-</header>
+</div>
 
-<!-- FORM -->
-<div class="form-card">
-  <h2>+ Nova Camisa</h2>
-  <div class="grid">
+<!-- TAB BAR -->
+<div class="tab-bar" id="tab-bar" style="display:none">
+  <button class="tab-btn active-passos" id="tab-passos" onclick="showTab('passos')">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q=="> Passos Sports
+  </button>
+  <button class="tab-btn" id="tab-chuan" onclick="showTab('chuan')">
+    <img src="data:image/jpeg;base64,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"> Chuan Chen
+  </button>
+  <button style="padding:12px 14px;border:none;background:none;color:#999;font-size:.75rem;cursor:pointer;font-weight:600;" onclick="logout()">Sair</button>
+</div>
 
-    <div class="full">
-      <label>Foto da Camisa</label>
-      <div class="photo-box" id="photo-box">
-        <input type="file" accept="image/*" onchange="onPhoto(this)">
-        <div class="ph" id="ph-placeholder"><span>📷</span>Toque para foto</div>
-        <img id="ph-preview" style="display:none">
-      </div>
+<!-- ═══ PASSOS SECTION ═══ -->
+<div class="section" id="sec-passos">
+  <div class="passos-header">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q==" style="height:42px;width:42px;object-fit:contain;border-radius:6px;background:#000;">
+      <div><h1>Passos Sports</h1><span>Gerador de Pedidos</span></div>
     </div>
-
-    <div class="full">
-      <label>Tipo</label>
-      <div class="tipo-wrap">
-        <div class="tipo-btn t-fan on" id="btn-fan" onclick="setTipo('fan')">👕 Fã</div>
-        <div class="tipo-btn t-jog" id="btn-jog" onclick="setTipo('jogador')">⭐ Jogador</div>
-      </div>
-    </div>
-
-    <div class="full">
-      <label>Time / Modelo</label>
-      <input type="text" id="f-time" placeholder="Ex: Brasil Away 2026, Flamengo Home...">
-    </div>
-
-    <div>
-      <label>Nome (opcional)</label>
-      <input type="text" id="f-nome" placeholder="Ex: Marta">
-    </div>
-
-    <div>
-      <label>Número (opcional)</label>
-      <input type="number" id="f-num" placeholder="10" min="1" max="99">
-    </div>
-
-    <div>
-      <label>Tamanho</label>
-      <select id="f-tam">
-        <option value="">— selecione —</option>
-        <option>S</option><option>M</option><option>L</option>
-        <option>XL</option><option>XXL</option><option>2 XXL</option><option>3XL</option>
-        <option>4XL</option>
-        <option>Infantil 6</option><option>Infantil 8</option><option>Infantil 10</option>
-        <option>Infantil 12</option><option>Infantil 14</option><option>Infantil 16</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Quantidade</label>
-      <input type="number" id="f-qty" value="1" min="1" max="99">
-    </div>
-
-    <div class="full">
-      <label>Observação (opcional)</label>
-      <input type="text" id="f-obs" placeholder="Ex: manga longa, patch, away...">
-    </div>
-
-    <div class="full">
-      <label>Tipo de Entrega</label>
-      <div class="tipo-wrap">
-        <div class="tipo-btn t-reg on" id="btn-reg" onclick="setEntrega('regular')">🚢 Entrega Regular</div>
-        <div class="tipo-btn t-rap" id="btn-rap" onclick="setEntrega('rapida')">✈️ Entrega Rápida</div>
-      </div>
-    </div>
-
+    <span id="hdr-count">0 itens</span>
   </div>
-  <button class="btn-add" onclick="addItem()">✅ Adicionar ao Pedido</button>
+
+  <div class="form-card">
+    <h2>+ Nova Camisa</h2>
+    <div class="grid">
+      <div class="full">
+        <label>Foto da Camisa</label>
+        <div class="photo-box" id="photo-box">
+          <input type="file" accept="image/*" onchange="onPhoto(this)">
+          <div class="ph" id="ph-placeholder"><span>📷</span>Toque para foto</div>
+          <img id="ph-preview" style="display:none">
+        </div>
+      </div>
+      <div class="full">
+        <label>Tipo</label>
+        <div class="tipo-wrap">
+          <div class="tipo-btn t-fan on" id="btn-fan" onclick="setTipo('fan')">👕 Fã</div>
+          <div class="tipo-btn t-jog" id="btn-jog" onclick="setTipo('jogador')">⭐ Jogador</div>
+        </div>
+      </div>
+      <div class="full">
+        <label>Time / Modelo</label>
+        <input type="text" id="f-time" placeholder="Ex: Brasil Away 2026, Flamengo Home...">
+      </div>
+      <div>
+        <label>Nome (opcional)</label>
+        <input type="text" id="f-nome" placeholder="Ex: Marta">
+      </div>
+      <div>
+        <label>Número (opcional)</label>
+        <input type="number" id="f-num" placeholder="10" min="1" max="99">
+      </div>
+      <div>
+        <label>Tamanho</label>
+        <select id="f-tam">
+          <option value="">— selecione —</option>
+          <option>S</option><option>M</option><option>L</option>
+          <option>XL</option><option>XXL</option><option>2 XXL</option>
+          <option>3XL</option><option>4XL</option>
+          <option>Infantil 6</option><option>Infantil 8</option><option>Infantil 10</option>
+          <option>Infantil 12</option><option>Infantil 14</option><option>Infantil 16</option>
+        </select>
+      </div>
+      <div>
+        <label>Quantidade</label>
+        <input type="number" id="f-qty" value="1" min="1" max="99">
+      </div>
+      <div class="full">
+        <label>Tipo de Entrega</label>
+        <div class="tipo-wrap">
+          <div class="tipo-btn t-reg on" id="btn-reg" onclick="setEntrega('regular')">🚢 Regular</div>
+          <div class="tipo-btn t-rap" id="btn-rap" onclick="setEntrega('rapida')">✈️ Rápida</div>
+        </div>
+      </div>
+      <div class="full">
+        <label>Observação (opcional)</label>
+        <input type="text" id="f-obs" placeholder="Ex: manga longa, patch, away...">
+      </div>
+    </div>
+    <button class="btn-add" onclick="addItem()">✅ Adicionar ao Pedido</button>
+  </div>
+
+  <div class="summary">
+    <span>📦 Total do pedido</span>
+    <span id="sum-total">0 peças</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Foto</th><th>Time/Modelo</th><th>Tipo</th>
+        <th>Nome/Nº</th><th>Tam</th><th>Qtd</th><th>Entrega</th><th>Obs</th><th></th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="bottom" id="passos-bottom">
+    <button class="action-btn btn-img" id="btn-share" onclick="gerarImagem()">📷 Gerar & Enviar</button>
+    <button class="action-btn btn-pdf" onclick="window.print()">🖨️</button>
+    <button class="action-btn btn-clr" onclick="limpar()">🗑️</button>
+  </div>
 </div>
 
-<!-- SUMMARY -->
-<div class="summary">
-  <span>📦 Total do pedido</span>
-  <span id="sum-total">0 peças</span>
+<!-- ═══ CHUAN SECTION ═══ -->
+<div class="section" id="sec-chuan">
+  <div class="chuan-header">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="data:image/jpeg;base64,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" style="height:42px;width:42px;object-fit:contain;border-radius:50%;border:2px solid rgba(255,255,255,.3);">
+      <div><h1>Chen Chuan 陈川</h1><span>订单确认系统 · Order Confirmation</span></div>
+    </div>
+    <span id="chuan-hdr-count" style="font-size:.75rem;opacity:.85;">0 pedidos</span>
+  </div>
+
+  <div class="chuan-form">
+    <h2>+ 新订单 · Novo Pedido</h2>
+    <div class="grid">
+      <div class="full">
+        <label>📷 Foto do Produto · 产品图片</label>
+        <div class="photo-box">
+          <input type="file" accept="image/*" onchange="onChuanPhoto(this)">
+          <div class="ph" id="cph-placeholder"><span>📷</span>Foto / 照片</div>
+          <img id="cph-preview" style="display:none">
+        </div>
+      </div>
+      <div class="full">
+        <label>Cliente · 客户名</label>
+        <input type="text" id="c-cliente" placeholder="Nome do cliente / 客户姓名">
+      </div>
+      <div class="full">
+        <label>Produto · 产品</label>
+        <input type="text" id="c-produto" placeholder="Ex: Brasil Home 2026">
+      </div>
+      <div>
+        <label>Tamanho · 尺寸</label>
+        <select id="c-tam">
+          <option value="">— selecione —</option>
+          <option>S</option><option>M</option><option>L</option>
+          <option>XL</option><option>XXL</option><option>2 XXL</option>
+          <option>3XL</option><option>4XL</option>
+        </select>
+      </div>
+      <div>
+        <label>Quantidade · 数量</label>
+        <input type="number" id="c-qty" value="1" min="1" max="99">
+      </div>
+      <div>
+        <label>Prazo · 交货期</label>
+        <select id="c-prazo">
+          <option value="">— selecione —</option>
+          <option>3-5 dias / 3-5天</option>
+          <option>7-10 dias / 7-10天</option>
+          <option>15-20 dias / 15-20天</option>
+          <option>20-30 dias / 20-30天</option>
+        </select>
+      </div>
+      <div>
+        <label>Status · 状态</label>
+        <select id="c-status">
+          <option value="confirmado">✅ Confirmado</option>
+          <option value="producao">🔨 Em Produção</option>
+          <option value="enviado">📦 Enviado</option>
+          <option value="entregue">🎉 Entregue</option>
+        </select>
+      </div>
+      <div class="full">
+        <label>Observação · 备注</label>
+        <input type="text" id="c-obs" placeholder="Ex: personalização, cor especial...">
+      </div>
+    </div>
+    <button class="btn-chuan-add" onclick="addChuanItem()">✅ Confirmar Pedido · 确认订单</button>
+  </div>
+
+  <div class="chuan-summary">
+    <span>📋 Total de pedidos</span>
+    <span id="chuan-sum-total">0 pedidos</span>
+  </div>
+
+  <div class="chuan-tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Foto</th><th>Cliente</th><th>Produto</th>
+        <th>Tam</th><th>Qtd</th><th>Prazo</th><th>Status</th><th></th>
+      </tr></thead>
+      <tbody id="chuan-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="chuan-bottom" id="chuan-bottom">
+    <button class="action-btn btn-chuan-img" id="btn-chuan-share" onclick="gerarChuanImagem()">📷 Gerar Comprovante</button>
+    <button class="action-btn btn-chuan-clr" onclick="limparChuan()">🗑️</button>
+  </div>
 </div>
 
-<!-- TABLE -->
-<div class="tbl-wrap">
-  <table>
-    <thead>
-      <tr>
-        <th>Foto</th>
-        <th>Time/Modelo</th>
-        <th>Tipo</th>
-        <th>Nome/Nº</th>
-        <th>Tamanho</th>
-        <th>Qtd</th>
-        <th>Entrega</th>
-        <th>Obs</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
-</div>
-
-<!-- BOTTOM -->
-<div class="bottom">
-  <button class="action-btn btn-img" id="btn-share" onclick="gerarImagem()">📷 Gerar & Enviar</button>
-  <button class="action-btn btn-pdf" onclick="window.print()">🖨️</button>
-  <button class="action-btn btn-clr" onclick="limpar()">🗑️</button>
-</div>
-
-<!-- OVERLAY with image preview -->
+<!-- OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="overlay-box">
-    <h3>📋 Pedido Gerado!</h3>
-    <p>👉 <strong>Compartilhar</strong>: abre o menu do iPhone<br>👉 <strong>Ver & Salvar</strong>: abre a imagem em tela cheia — pressione e segure para salvar na galeria</p>
+    <h3 id="ov-title">📋 Pedido Gerado!</h3>
+    <p id="ov-desc">Compartilhe pelo WhatsApp ou salve na galeria.</p>
     <img id="ov-img" src="" alt="pedido">
     <div class="ov-btns">
       <button class="ov-share" onclick="compartilhar()">📲 Compartilhar</button>
-      <button class="ov-save"  onclick="abrirImagem()">🔍 Ver & Salvar</button>
+      <button class="ov-open"  onclick="abrirImagem()">🔍 Ver & Salvar</button>
       <button class="ov-close" onclick="fecharOverlay()">✕</button>
     </div>
   </div>
 </div>
 
-<!-- CAPTURE AREA -->
+<!-- PASSOS CAPTURE -->
 <div id="capture-area">
   <div class="cap-header">
     <div style="display:flex;align-items:center;gap:8px;">
       <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABQAFADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAYHAgMEBQH/xAA6EAABAwMCAwMHCgcAAAAAAAABAgMEAAURBjEHEiFBUXETIkJhgZGTFBcjMjM1UoPR4VSSlKGx4vD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAwQFAQL/xAAtEQABAwMBBgMJAAAAAAAAAAAAAQIDBBESIRQxQXGh0QUVkRMiIyUyUYHB8P/aAAwDAQACEQMRAD8ApmlKUApSlAKUpQClKUApSlAKUIpQClKUApSlAKUpQClKUBscxnpWUNph6SluTJ+TNq3c5CsJ8QOta1VjXLaWOrvJzD4ZOXCMmTCvsKQyrZbaVEft7a62+D1xc2usb4aqhFrvFws0oSbfKcjudvKeivURsR41N4/GO7NNJSu2QnFgYKsrTn14zWVLHXtd8N6KnJLllroFTVupvHBW44ybxEH5a61L4Ozkb3iKfy11krjRdVD7qhDwWv8AWudfF25r3tsT2LX+tRO8z4W6HW7PxPiuE8xG92jfDVWpXC+UkfejHw1UVxUnrPW2xf51/rX2NxImyZTTJtbS/KKCeVtauZWTjpmvPzREutuhOiUf9c0OcNZvKoM3KKtY2CkqTn24NRa42yXaJqoc5ktOp64zkEdhB7RVzvHlUUJSemxNV1xCntSr21FbKVmI1yLUPxE5x7M/5pQVs80uD9UseqqmjjZk3QihWVbgGselKVumWKt3hppSPFspu1wjNuPTfskuoCghsbHB/EevgB31XukrCdQX1qMsH5O39JIUOxA7PE7e2rnuMqWhlMe2NtJVgBKnfqNjYeaOp9Q6eNYnitViiQtXVd/Iv0kGXvqmhx6gn6fsEUvzYkRJOfJtJjo53D3AY/vtVYTFXfWkzMK2NsxUE8iWm0oQj1qXgZP/AAFdFxu9qg399U6O7fpLauVUh94JRkbhKACMA9K7k8TG0oCE2blSBgJEjAA8OWooIJoG5RsycvFVS34S9/Wykj3xPWz3WT7In7PIOgL2P4b437V7OmNIu2q4CdPWypxr7NtCicE+kT6uytSuJCFb2o/1H+taXOIiuX6G1oCuwuOlQ9wAqR/mMjVY5qJfl3Os2Njskdu59iV3q7pstpduDhBcJ5WEn0lnb2Dc+FVIt9xx1Tq1FTiyVKUepJO5rqu15nXqSH5r3OUjCEAYSgdwHZXDV2hpNnYuX1Lv7FaqqPbO03IKVZ1y4JzIdlfucW/Q5SGWVPdEFKVJAycKyRsKjOg9G3PVt45YSkMNRcOOSHUc6EH0RjtJPZ6jV8qE10rb4mk9NCTcnWoz0oBx1Tpxjp5qR34B27ya8W+8RmPJux7O0ta1JKRJc80J9aU7+/3V0664ZXWzWSTqC46gFxUypAKS0oE8ygnoScDeo3orQVz1s++IjjUePHx5V93OATsABuelZMfhjFkWWdcnL6F51Y5GYRpZOpFycnJ60q1WuCAfkrjM6tgOPt552kN8y043yArIqOSuGd2a1sjS0eRHkPraDxeBKUIb71do8Ou4761iiQ2lWorgj5KQiK/qy3tyV45WSjzjnbAKsn3V4GreGNx0xMtsZuWzcHLk6WmENpKFFfTsPZ5w65oCFUq0fmQkRozbl01LboS1+ioHGe4KJGa5dRcHZli0/IvDd6iymo7flFJDZRzJ6fVOSDv7aA//2Q==" style="height:40px;width:40px;object-fit:contain;border-radius:4px;background:#000;">
       <div class="cap-logo">PASSOS SPORTS</div>
     </div>
-    <div class="cap-info">
+    <div style="font-size:.82rem;color:#666;margin-left:auto;">
       <strong>Pedido de Camisas</strong><br>
       <span id="cap-date"></span>
     </div>
@@ -323,272 +539,277 @@ tbody td { padding: 9px 7px; font-size: .82rem; text-align: center; vertical-ali
   <div class="cap-total" id="cap-total-txt"></div>
 </div>
 
-<script>
-let orders = JSON.parse(localStorage.getItem('ps_orders') || '[]');
-let selImg = null;
-let selTipo = 'fan';
-let selEntrega = 'regular';
-let generatedImgData = null;
+<!-- CHUAN CAPTURE -->
+<div id="chuan-capture">
+  <div class="cc-header">
+    <div class="cc-logo-wrap">
+      <img src="data:image/jpeg;base64,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" alt="Chuan Chen">
+    </div>
+    <div class="cc-title">
+      <h2>Chen Chuan · 陈川</h2>
+      <p>订单确认 · Order Confirmation | <span id="cc-date"></span></p>
+    </div>
+  </div>
+  <div id="cc-table"></div>
+  <div class="cc-footer" id="cc-footer">
+    <strong>Chen Chuan Sports</strong> · WhatsApp: +86 130 7027 4743<br>
+    感谢您的订单！Thank you for your order!
+  </div>
+</div>
 
-render();
+<script>
+// ── AUTH ──
+let currentUser = null;
+let loginUser = 'passos';
+
+function selectUser(u) {
+  loginUser = u;
+  document.getElementById('lt-passos').className = 'login-tab' + (u==='passos'?' active-passos':'');
+  document.getElementById('lt-chuan').className  = 'login-tab' + (u==='chuan'?' active-chuan':'');
+  document.getElementById('login-btn').className = u==='passos' ? 'login-btn login-btn-passos' : 'login-btn login-btn-chuan';
+  document.getElementById('login-pwd').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function doLogin() {
+  const pwd = document.getElementById('login-pwd').value;
+  const ok = (loginUser==='passos' && pwd==='1365@') || (loginUser==='chuan' && pwd==='1234@');
+  if (ok) {
+    currentUser = loginUser;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('tab-bar').style.display = 'flex';
+    showTab(currentUser);
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('tab-bar').style.display = 'none';
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+  document.getElementById('login-pwd').value = '';
+}
+
+function showTab(t) {
+  document.getElementById('sec-passos').className = 'section' + (t==='passos'?' on':'');
+  document.getElementById('sec-chuan').className  = 'section' + (t==='chuan'?' on':'');
+  document.getElementById('tab-passos').className = 'tab-btn' + (t==='passos'?' active-passos':'');
+  document.getElementById('tab-chuan').className  = 'tab-btn' + (t==='chuan'?' active-chuan':'');
+  document.getElementById('passos-bottom').style.display = t==='passos'?'flex':'none';
+  document.getElementById('chuan-bottom').style.display  = t==='chuan'?'flex':'none';
+}
+
+// ── PASSOS STATE ──
+let orders = JSON.parse(localStorage.getItem('ps_orders')||'[]');
+let selImg=null, selTipo='fan', selEntrega='regular', generatedImgData=null, generatedFor='passos';
+
+renderPassos();
 
 function onPhoto(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const r = new FileReader();
-  r.onload = e => {
-    selImg = e.target.result;
-    document.getElementById('ph-preview').src = selImg;
-    document.getElementById('ph-preview').style.display = 'block';
-    document.getElementById('ph-placeholder').style.display = 'none';
-  };
+  const file=input.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=e=>{ selImg=e.target.result; document.getElementById('ph-preview').src=selImg; document.getElementById('ph-preview').style.display='block'; document.getElementById('ph-placeholder').style.display='none'; };
   r.readAsDataURL(file);
 }
-
 function setTipo(t) {
-  selTipo = t;
-  document.getElementById('btn-fan').className = 'tipo-btn t-fan' + (t === 'fan' ? ' on' : '');
-  document.getElementById('btn-jog').className = 'tipo-btn t-jog' + (t === 'jogador' ? ' on' : '');
+  selTipo=t;
+  document.getElementById('btn-fan').className='tipo-btn t-fan'+(t==='fan'?' on':'');
+  document.getElementById('btn-jog').className='tipo-btn t-jog'+(t==='jogador'?' on':'');
 }
-
 function setEntrega(e) {
-  selEntrega = e;
-  document.getElementById('btn-reg').className = 'tipo-btn t-reg' + (e === 'regular' ? ' on' : '');
-  document.getElementById('btn-rap').className = 'tipo-btn t-rap' + (e === 'rapida' ? ' on' : '');
+  selEntrega=e;
+  document.getElementById('btn-reg').className='tipo-btn t-reg'+(e==='regular'?' on':'');
+  document.getElementById('btn-rap').className='tipo-btn t-rap'+(e==='rapida'?' on':'');
 }
-
 function addItem() {
-  const tam = document.getElementById('f-tam').value;
-  if (!tam) { alert('Selecione o tamanho!'); return; }
+  const tam=document.getElementById('f-tam').value;
+  if(!tam){alert('Selecione o tamanho!');return;}
   orders.push({
-    id: Date.now(),
-    img: selImg,
-    tipo: selTipo,
-    time: document.getElementById('f-time').value.trim(),
-    nome: document.getElementById('f-nome').value.trim(),
-    num:  document.getElementById('f-num').value.trim(),
-    tam,
-    qty:  parseInt(document.getElementById('f-qty').value) || 1,
-    obs:  document.getElementById('f-obs').value.trim(),
-    entrega: selEntrega,
+    id:Date.now(), img:selImg, tipo:selTipo,
+    time:document.getElementById('f-time').value.trim(),
+    nome:document.getElementById('f-nome').value.trim(),
+    num:document.getElementById('f-num').value.trim(),
+    tam, qty:parseInt(document.getElementById('f-qty').value)||1,
+    entrega:selEntrega,
+    obs:document.getElementById('f-obs').value.trim(),
   });
-  save(); render(); resetForm();
+  savePassos(); renderPassos(); resetPassos();
+}
+function resetPassos() {
+  selImg=null; selTipo='fan'; selEntrega='regular';
+  document.getElementById('ph-preview').style.display='none';
+  document.getElementById('ph-placeholder').style.display='flex';
+  document.getElementById('photo-box').querySelector('input').value='';
+  ['f-time','f-nome','f-num','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-tam').value='';
+  document.getElementById('f-qty').value='1';
+  setTipo('fan'); setEntrega('regular');
+}
+function delItem(id) { orders=orders.filter(o=>o.id!==id); savePassos(); renderPassos(); }
+function chgQty(id,d) { const o=orders.find(x=>x.id===id); if(o){o.qty=Math.max(1,o.qty+d); savePassos(); renderPassos();} }
+function savePassos() { localStorage.setItem('ps_orders',JSON.stringify(orders)); }
+function limpar() { if(!orders.length)return; if(confirm('Limpar todo o pedido?')){orders=[];savePassos();renderPassos();} }
+
+function renderPassos() {
+  const total=orders.reduce((s,o)=>s+o.qty,0);
+  document.getElementById('hdr-count').textContent=orders.length+(orders.length===1?' item':' itens');
+  document.getElementById('sum-total').textContent=total+' peça'+(total!==1?'s':'');
+  const tbody=document.getElementById('tbody');
+  if(!orders.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty"><div class="icon">👕</div><p>Nenhuma camisa ainda.</p></div></td></tr>';return;}
+  tbody.innerHTML=orders.map(o=>`<tr>
+    <td>${o.img?`<img class="thumb" src="${o.img}">`:'<div class="no-img">Sem foto</div>'}</td>
+    <td style="font-size:.78rem;font-weight:600;">${o.time||'—'}</td>
+    <td><span class="badge ${o.tipo==='jogador'?'bj':'bf'}">${o.tipo==='jogador'?'Jogador':'Fã'}</span></td>
+    <td>${o.nome?`<div style="font-size:.78rem">${o.nome}</div>`:''}${o.num?`<div style="font-size:1.1rem;font-weight:800">${o.num}</div>`:''}${!o.nome&&!o.num?'—':''}</td>
+    <td><span class="sz">${o.tam}</span></td>
+    <td><div class="qty-ctrl"><button onclick="chgQty(${o.id},-1)">−</button><span>${o.qty}</span><button onclick="chgQty(${o.id},+1)">+</button></div></td>
+    <td><span style="font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:12px;${o.entrega==='rapida'?'background:#fef5ec;color:#e67e22;border:1.5px solid #e67e22':'background:#eaf4fb;color:#2980b9;border:1.5px solid #2980b9'}">${o.entrega==='rapida'?'✈️ Rápida':'🚢 Regular'}</span></td>
+    <td style="font-size:.72rem;color:#777;">${o.obs||'—'}</td>
+    <td><button class="del-btn" onclick="delItem(${o.id})">✕</button></td>
+  </tr>`).join('');
 }
 
-function resetForm() {
-  selImg = null; selTipo = 'fan';
-  document.getElementById('ph-preview').style.display = 'none';
-  document.getElementById('ph-placeholder').style.display = 'flex';
-  document.getElementById('photo-box').querySelector('input').value = '';
-  ['f-time','f-nome','f-num','f-obs'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f-tam').value = '';
-  document.getElementById('f-qty').value = '1';
-  setTipo('fan');
-  setEntrega('regular');
+// ── CHUAN STATE ──
+let cOrders=JSON.parse(localStorage.getItem('cc_orders')||'[]');
+let cImg=null, cGeneratedImg=null;
+
+renderChuan();
+
+function onChuanPhoto(input) {
+  const file=input.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=e=>{ cImg=e.target.result; document.getElementById('cph-preview').src=cImg; document.getElementById('cph-preview').style.display='block'; document.getElementById('cph-placeholder').style.display='none'; };
+  r.readAsDataURL(file);
 }
-
-function delItem(id) { orders = orders.filter(o => o.id !== id); save(); render(); }
-function chgQty(id, d) {
-  const o = orders.find(x => x.id === id);
-  if (o) { o.qty = Math.max(1, o.qty + d); save(); render(); }
+function addChuanItem() {
+  const tam=document.getElementById('c-tam').value;
+  const cliente=document.getElementById('c-cliente').value.trim();
+  if(!cliente){alert('Informe o nome do cliente!');return;}
+  if(!tam){alert('Selecione o tamanho!');return;}
+  cOrders.push({
+    id:Date.now(), img:cImg,
+    cliente, produto:document.getElementById('c-produto').value.trim(),
+    tam, qty:parseInt(document.getElementById('c-qty').value)||1,
+    prazo:document.getElementById('c-prazo').value,
+    status:document.getElementById('c-status').value,
+    obs:document.getElementById('c-obs').value.trim(),
+  });
+  saveChuan(); renderChuan(); resetChuan();
 }
-
-function render() {
-  const total = orders.reduce((s, o) => s + o.qty, 0);
-  document.getElementById('hdr-count').textContent = orders.length + (orders.length === 1 ? ' item' : ' itens');
-  document.getElementById('sum-total').textContent = total + ' peça' + (total !== 1 ? 's' : '');
-
-  const tbody = document.getElementById('tbody');
-  if (orders.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="icon">👕</div><p>Nenhuma camisa ainda.<br>Adicione acima!</p></div></td></tr>`;
-    return;
-  }
-  tbody.innerHTML = orders.map(o => `
-    <tr>
-      <td>${o.img ? `<img class="thumb" src="${o.img}">` : `<div class="no-img">Sem foto</div>`}</td>
-      <td style="font-size:.78rem;font-weight:600;max-width:90px;word-break:break-word;">${o.time || '<span style="color:#ccc">—</span>'}</td>
-      <td><span class="badge ${o.tipo==='jogador'?'bj':'bf'}">${o.tipo==='jogador'?'Jogador':'Fã'}</span></td>
-      <td>${o.nome?`<div style="font-size:.78rem">${o.nome}</div>`:''}${o.num?`<div style="font-size:1.1rem;font-weight:800">${o.num}</div>`:''}${!o.nome&&!o.num?'<span style="color:#ccc">—</span>':''}</td>
-      <td><span class="sz">${o.tam}</span></td>
-      <td><div class="qty-ctrl"><button onclick="chgQty(${o.id},-1)">−</button><span>${o.qty}</span><button onclick="chgQty(${o.id},+1)">+</button></div></td>
-      <td><span style="font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:12px;${o.entrega==='rapida'?'background:#fef5ec;color:#e67e22;border:1.5px solid #e67e22':'background:#eaf4fb;color:#2980b9;border:1.5px solid #2980b9'}">${o.entrega==='rapida'?'✈️ Rápida':'🚢 Regular'}</span></td>
-      <td style="font-size:.72rem;color:#777;max-width:80px">${o.obs||'<span style="color:#ccc">—</span>'}</td>
-      <td><button class="del-btn" onclick="delItem(${o.id})">✕</button></td>
-    </tr>`).join('');
+function resetChuan() {
+  cImg=null;
+  document.getElementById('cph-preview').style.display='none';
+  document.getElementById('cph-placeholder').style.display='flex';
+  ['c-cliente','c-produto','c-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('c-tam').value='';
+  document.getElementById('c-qty').value='1';
+  document.getElementById('c-prazo').value='';
+  document.getElementById('c-status').value='confirmado';
 }
+function delChuanItem(id) { cOrders=cOrders.filter(o=>o.id!==id); saveChuan(); renderChuan(); }
+function saveChuan() { localStorage.setItem('cc_orders',JSON.stringify(cOrders)); }
+function limparChuan() { if(!cOrders.length)return; if(confirm('Limpar todos os pedidos?')){cOrders=[];saveChuan();renderChuan();} }
 
-function save() { localStorage.setItem('ps_orders', JSON.stringify(orders)); }
+const statusLabel={confirmado:'✅ Confirmado',producao:'🔨 Em Produção',enviado:'📦 Enviado',entregue:'🎉 Entregue'};
 
-function limpar() {
-  if (!orders.length) return;
-  if (confirm('Limpar todo o pedido?')) { orders = []; save(); render(); }
+function renderChuan() {
+  document.getElementById('chuan-hdr-count').textContent=cOrders.length+' pedido'+(cOrders.length!==1?'s':'');
+  document.getElementById('chuan-sum-total').textContent=cOrders.length+' pedido'+(cOrders.length!==1?'s':'');
+  const tbody=document.getElementById('chuan-tbody');
+  if(!cOrders.length){tbody.innerHTML='<tr><td colspan="8"><div class="empty"><div class="icon">📋</div><p>Nenhum pedido ainda.</p></div></td></tr>';return;}
+  tbody.innerHTML=cOrders.map(o=>`<tr>
+    <td>${o.img?`<img class="thumb" src="${o.img}">`:'<div class="no-img">Sem foto</div>'}</td>
+    <td style="font-size:.82rem;font-weight:700;">${o.cliente||'—'}</td>
+    <td style="font-size:.78rem;">${o.produto||'—'}</td>
+    <td><span class="sz">${o.tam}</span></td>
+    <td style="font-weight:800;">${o.qty}</td>
+    <td style="font-size:.75rem;color:#555;">${o.prazo||'—'}</td>
+    <td><span style="font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:12px;background:#edfbf2;color:#1a7a3c;border:1.5px solid #1a7a3c;">${statusLabel[o.status]||o.status}</span></td>
+    <td><button class="del-btn" onclick="delChuanItem(${o.id})">✕</button></td>
+  </tr>`).join('');
 }
 
 // ── IMAGE GENERATION ──
 function buildCaptureHTML() {
-  const total = orders.reduce((s, o) => s + o.qty, 0);
-  document.getElementById('cap-date').textContent = 'Data: ' + new Date().toLocaleDateString('pt-BR');
-  document.getElementById('cap-total-txt').textContent = 'TOTAL: ' + total + ' peça' + (total !== 1 ? 's' : '');
-
-  const rows = orders.map((o, i) => {
-    const imgCell = o.img
-      ? `<img src="${o.img}" style="width:72px;height:72px;object-fit:contain;border:1px solid #ddd;border-radius:4px;">`
-      : `<div style="width:72px;height:72px;background:#f2f2f2;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#bbb;margin:0 auto;">Sem foto</div>`;
-    const bg  = o.tipo==='jogador' ? '#edfbf2' : '#fffbea';
-    const cor = o.tipo==='jogador' ? '#1a7a3c' : '#7a6000';
-    const brd = o.tipo==='jogador' ? '#1a7a3c' : '#f5c800';
-    return `<tr style="border-bottom:1px solid #eee;">
-      <td style="padding:10px 8px;text-align:center;">${imgCell}</td>
-      <td style="padding:10px 8px;font-size:.8rem;font-weight:600;">${o.time||'—'}</td>
-      <td style="padding:10px 8px;text-align:center;">
-        <span style="background:${bg};color:${cor};border:1.5px solid ${brd};border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:800;">${o.tipo==='jogador'?'Jogador':'Fã'}</span>
-      </td>
-      <td style="padding:10px 8px;text-align:center;">
-        ${o.nome?`<div style="font-size:.8rem">${o.nome}</div>`:''}
-        ${o.num?`<div style="font-size:1.2rem;font-weight:800">${o.num}</div>`:''}
-        ${!o.nome&&!o.num?'—':''}
-      </td>
-      <td style="padding:10px 8px;text-align:center;">
-        <span style="background:#f0f0f0;border-radius:4px;padding:4px 12px;font-weight:800;font-size:.82rem;">${o.tam}</span>
-      </td>
-      <td style="padding:10px 8px;text-align:center;font-size:1rem;font-weight:800;">${o.qty}</td>
-      <td style="padding:10px 8px;font-size:.75rem;color:#777;">${o.obs||'—'}</td>
-    </tr>`;
+  const total=orders.reduce((s,o)=>s+o.qty,0);
+  document.getElementById('cap-date').textContent='Data: '+new Date().toLocaleDateString('pt-BR');
+  document.getElementById('cap-total-txt').textContent='TOTAL: '+total+' peça'+(total!==1?'s':'');
+  const rows=orders.map(o=>{
+    const imgCell=o.img?`<img src="${o.img}" style="width:72px;height:72px;object-fit:contain;border:1px solid #ddd;border-radius:4px;">`:'<div style="width:72px;height:72px;background:#f2f2f2;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#bbb;margin:0 auto;">Sem foto</div>';
+    const bg=o.tipo==='jogador'?'#edfbf2':'#fffbea', cor=o.tipo==='jogador'?'#1a7a3c':'#7a6000', brd=o.tipo==='jogador'?'#1a7a3c':'#f5c800';
+    return `<tr style="border-bottom:1px solid #eee;"><td style="padding:10px 8px;text-align:center;">${imgCell}</td><td style="padding:10px 8px;font-size:.8rem;font-weight:600;">${o.time||'—'}</td><td style="padding:10px 8px;text-align:center;"><span style="background:${bg};color:${cor};border:1.5px solid ${brd};border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:800;">${o.tipo==='jogador'?'Jogador':'Fã'}</span></td><td style="padding:10px 8px;text-align:center;">${o.nome?`<div style="font-size:.8rem">${o.nome}</div>`:''}${o.num?`<div style="font-size:1.2rem;font-weight:800">${o.num}</div>`:''}${!o.nome&&!o.num?'—':''}</td><td style="padding:10px 8px;text-align:center;"><span style="background:#f0f0f0;border-radius:4px;padding:4px 12px;font-weight:800;">${o.tam}</span></td><td style="padding:10px 8px;text-align:center;font-size:1rem;font-weight:800;">${o.qty}</td><td style="padding:10px 8px;text-align:center;font-size:.75rem;font-weight:700;color:${o.entrega==='rapida'?'#e67e22':'#2980b9'}">${o.entrega==='rapida'?'✈️ Rápida':'🚢 Regular'}</td><td style="padding:10px 8px;font-size:.75rem;color:#777;">${o.obs||'—'}</td></tr>`;
   }).join('');
+  document.getElementById('cap-table').innerHTML=`<table><thead><tr><th>FOTO</th><th>TIME/MODELO</th><th>TIPO</th><th>NOME/Nº</th><th>TAMANHO</th><th>QTD</th><th>ENTREGA</th><th>OBS</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
 
-  document.getElementById('cap-table').innerHTML = `
-    <table>
-      <thead><tr>
-        <th>FOTO</th><th>TIME/MODELO</th><th>TIPO</th>
-        <th>NOME/Nº</th><th>TAMANHO</th><th>QTD</th><th>ENTREGA</th><th>OBS</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+function buildChuanCaptureHTML() {
+  document.getElementById('cc-date').textContent=new Date().toLocaleDateString('pt-BR');
+  const rows=cOrders.map(o=>{
+    const imgCell=o.img?`<img src="${o.img}" style="width:72px;height:72px;object-fit:contain;border:1px solid #ddd;border-radius:4px;">`:'<div style="width:72px;height:72px;background:#f2f2f2;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#bbb;margin:0 auto;">Sem foto</div>';
+    return `<tr style="border-bottom:1px solid #eee;"><td style="padding:10px 8px;text-align:center;">${imgCell}</td><td style="padding:10px 8px;font-size:.85rem;font-weight:700;">${o.cliente||'—'}</td><td style="padding:10px 8px;font-size:.8rem;">${o.produto||'—'}</td><td style="padding:10px 8px;text-align:center;"><span style="background:#f0f0f0;border-radius:4px;padding:4px 12px;font-weight:800;">${o.tam}</span></td><td style="padding:10px 8px;text-align:center;font-weight:800;">${o.qty}</td><td style="padding:10px 8px;font-size:.78rem;color:#555;">${o.prazo||'—'}</td><td style="padding:10px 8px;text-align:center;"><span style="background:#edfbf2;color:#1a7a3c;border:1.5px solid #1a7a3c;border-radius:12px;padding:3px 10px;font-size:.72rem;font-weight:800;">${statusLabel[o.status]||o.status}</span></td><td style="padding:10px 8px;font-size:.75rem;color:#777;">${o.obs||'—'}</td></tr>`;
+  }).join('');
+  document.getElementById('cc-table').innerHTML=`<table><thead><tr style="background:#1a4a8a;"><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">FOTO</th><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">CLIENTE</th><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">PRODUTO</th><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">TAM</th><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">QTD</th><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">PRAZO</th><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">STATUS</th><th style="color:white;padding:9px 8px;font-size:.72rem;font-weight:800;">OBS</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 async function gerarImagem() {
-  if (!orders.length) { alert('Adicione itens ao pedido primeiro!'); return; }
-
-  const btn = document.getElementById('btn-share');
-  btn.textContent = '⏳ Gerando...';
-  btn.disabled = true;
-
+  if(!orders.length){alert('Adicione itens ao pedido primeiro!');return;}
+  const btn=document.getElementById('btn-share');
+  btn.textContent='⏳ Gerando...'; btn.disabled=true;
   buildCaptureHTML();
-  await new Promise(r => setTimeout(r, 500));
-
+  await new Promise(r=>setTimeout(r,500));
   try {
-    const area = document.getElementById('capture-area');
-    const canvas = await html2canvas(area, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
-      logging: false,
-      imageTimeout: 20000
-    });
-
-    generatedImgData = canvas.toDataURL('image/png');
-
-    btn.textContent = '📷 Gerar & Enviar';
-    btn.disabled = false;
-
-    // Show overlay with preview
-    document.getElementById('ov-img').src = generatedImgData;
+    const canvas=await html2canvas(document.getElementById('capture-area'),{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,imageTimeout:20000});
+    generatedImgData=canvas.toDataURL('image/png');
+    generatedFor='passos';
+    btn.textContent='📷 Gerar & Enviar'; btn.disabled=false;
+    document.getElementById('ov-title').textContent='📋 Pedido Passos Sports!';
+    document.getElementById('ov-desc').textContent='Compartilhe pelo WhatsApp com o fornecedor.';
+    document.getElementById('ov-img').src=generatedImgData;
     document.getElementById('overlay').classList.add('on');
+  } catch(e) { btn.textContent='📷 Gerar & Enviar'; btn.disabled=false; alert('Erro: '+e.message); }
+}
 
-  } catch(e) {
-    btn.textContent = '📷 Gerar & Enviar';
-    btn.disabled = false;
-    alert('Erro ao gerar imagem: ' + e.message);
-  }
+async function gerarChuanImagem() {
+  if(!cOrders.length){alert('Adicione pedidos primeiro!');return;}
+  const btn=document.getElementById('btn-chuan-share');
+  btn.textContent='⏳ Gerando...'; btn.disabled=true;
+  buildChuanCaptureHTML();
+  await new Promise(r=>setTimeout(r,500));
+  try {
+    const canvas=await html2canvas(document.getElementById('chuan-capture'),{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,imageTimeout:20000});
+    generatedImgData=canvas.toDataURL('image/png');
+    generatedFor='chuan';
+    btn.textContent='📷 Gerar Comprovante'; btn.disabled=false;
+    document.getElementById('ov-title').textContent='📋 Comprovante Chen Chuan!';
+    document.getElementById('ov-desc').textContent='Compartilhe com o cliente pelo WhatsApp.';
+    document.getElementById('ov-img').src=generatedImgData;
+    document.getElementById('overlay').classList.add('on');
+  } catch(e) { btn.textContent='📷 Gerar Comprovante'; btn.disabled=false; alert('Erro: '+e.message); }
 }
 
 async function compartilhar() {
   try {
-    const blob = await (await fetch(generatedImgData)).blob();
-    const file = new File([blob], 'pedido-passos-sports.png', { type: 'image/png' });
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    const blob=await (await fetch(generatedImgData)).blob();
+    const file=new File([blob],'pedido.png',{type:'image/png'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
       fecharOverlay();
-      await navigator.share({ files: [file], title: 'Pedido Passos Sports' });
-    } else {
-      // Fallback: open in new tab for long-press save
-      const w = window.open('', '_blank');
-      fecharOverlay();
-      if (w) {
-        w.document.write(`<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;}img{max-width:100%;}</style></head><body><img src="${generatedImgData}"></body></html>`);
-        w.document.close();
-      }
-    }
-  } catch(e) {
-    if (e.name !== 'AbortError') alert('Erro: ' + e.message);
-  }
-}
-
-async function salvarGaleria() {
-  try {
-    const blob = await (await fetch(generatedImgData)).blob();
-    const file = new File([blob], 'pedido-passos-sports.png', { type: 'image/png' });
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      fecharOverlay();
-      await navigator.share({ files: [file], title: 'Pedido Passos Sports' });
-    } else {
-      const a = document.createElement('a');
-      a.href = generatedImgData;
-      a.download = 'pedido-passos-sports.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      fecharOverlay();
-    }
-  } catch(e) {
-    if (e.name !== 'AbortError') alert('Erro: ' + e.message);
-  }
+      await navigator.share({files:[file],title:'Pedido'});
+    } else { abrirImagem(); }
+  } catch(e) { if(e.name!=='AbortError') alert('Erro: '+e.message); }
 }
 
 function abrirImagem() {
   fecharOverlay();
-  // Open fullscreen image page — user long-presses to save to Photos
-  const w = window.open('', '_blank');
-  if (w) {
-    w.document.write(`<!DOCTYPE html>
-<html><head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Pedido Passos Sports</title>
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#111; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:16px; gap:14px; }
-  .tip {
-    background:#1a7a3c; color:white; border-radius:10px; padding:12px 16px;
-    font-family:Arial,sans-serif; font-size:.9rem; text-align:center; line-height:1.5; width:100%;
-  }
-  .tip strong { display:block; font-size:1rem; margin-bottom:4px; }
-  img { width:100%; border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.5); }
-  .wa-btn {
-    background:#25D366; color:white; border:none; border-radius:10px;
-    padding:14px 20px; font-size:1rem; font-weight:800; width:100%; cursor:pointer;
-    font-family:Arial,sans-serif;
-  }
-</style>
-</head><body>
-  <div class="tip">
-    <strong>📲 Como enviar pelo WhatsApp:</strong>
-    1. Pressione e segure a imagem abaixo<br>
-    2. Toque em "Salvar na Galeria"<br>
-    3. Abra o WhatsApp e envie do rolo de câmera
-  </div>
-  <img src="${generatedImgData}" alt="Pedido Passos Sports">
-  <button class="wa-btn" onclick="window.open('https://wa.me/8613070274743','_blank')">
-    📱 Abrir WhatsApp do Fornecedor
-  </button>
-</body></html>`);
+  const w=window.open('','_blank');
+  if(w) {
+    w.document.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#111;display:flex;flex-direction:column;align-items:center;padding:16px;gap:14px;}.tip{background:#1a4a8a;color:white;border-radius:10px;padding:12px 16px;font-family:Arial;font-size:.9rem;text-align:center;line-height:1.5;width:100%;}.tip strong{display:block;font-size:1rem;margin-bottom:4px;}img{width:100%;border-radius:10px;}</style></head><body><div class="tip"><strong>📲 Pressione e segure a imagem</strong>para salvar na galeria<br>Depois envie pelo WhatsApp</div><img src="${generatedImgData}"></body></html>`);
     w.document.close();
   }
 }
 
-function fecharOverlay() {
-  document.getElementById('overlay').classList.remove('on');
-}
+function fecharOverlay() { document.getElementById('overlay').classList.remove('on'); }
 </script>
 </body>
 </html>
